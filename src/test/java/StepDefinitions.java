@@ -14,55 +14,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
 
-//public class StepDefinitions {
-//    public WebDriver driver;
-//    WebDriverWait wait;
 
-//    @Given("^User visits a visual discovery engine site$")
-//    public void user_visits_a_visual_discovery_engine_site() throws Exception {
-//        System.setProperty("webdriver.gecko.driver", "./src/test/resources/geckodriver.exe");
-//        FirefoxOptions ops = new FirefoxOptions();
-//        ops.addArguments("--headed"); //uncomment if you want to run in headless mode
-//        driver = new FirefoxDriver(ops);
-//        driver.manage().window().maximize();
-//        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-//        driver.get("http://automationpractice.com");
-//    }
-//
-//    @When("^User enters valid email \"([^\"]*)\" and valid password \"([^\"]*)\" credentials$")
-//    public void user_enters_valid_credentials(String email, String password) throws Exception {
-//        wait = new WebDriverWait(driver, 40);
-//        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("login")));// wait until getting the login button
-//        WebElement btnLogin = driver.findElement(By.className("login"));
-//        btnLogin.click();
-//        Thread.sleep(1000);
-//        WebElement txtEmail = driver.findElement(By.id("email"));
-//        txtEmail.sendKeys(email);
-//        WebElement txtPassword = driver.findElement(By.id("passwd"));
-//        txtPassword.sendKeys(password);
-//        Thread.sleep(1000);
-//        WebElement btnSubmitLogin = driver.findElement(By.id("SubmitLogin"));
-//        btnSubmitLogin.click();
-//    }
-//
-//    @Then("^User can logged in successfully$")
-//    public void user_can_logged_in_successfully() throws Exception {
-//        wait = new WebDriverWait(driver, 40);
-//        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='INd Jea gjz mQ8 zI7 iyn Hsu']//div[@class='INd XiG qJc zI7 iyn Hsu']//div[@class='INd XiG gpV zI7 iyn Hsu']//div[@class='Jea MIw QLY Rym mQ8 ojN p6V zI7 iyn Hsu']//*[@width='100%']")));
-//        WebElement lblUserName = driver.findElement(By.xpath("//div[@class='INd Jea gjz mQ8 zI7 iyn Hsu']//div[@class='INd XiG qJc zI7 iyn Hsu']//div[@class='INd XiG gpV zI7 iyn Hsu']//div[@class='Jea MIw QLY Rym mQ8 ojN p6V zI7 iyn Hsu']//*[@width='100%']"));
-//        Assert.assertEquals(lblUserName.getText(), "S");
-//    }
-//
-//    @After
-//    public void closeBrowser() {
-//        driver.quit();
-//    }
-
-    public class StepDefinitions {
-        public WebDriver driver;
-        WebDriverWait wait;
-
-        @Given("^User visits a visual discovery engine site$")
+public class StepDefinitions {
+    public WebDriver driver;
+    WebDriverWait wait;
+    int age = 0;
+    String age1 = String.valueOf(age);
+    @Given("^User visits a visual discovery engine site$")
         public void user_visits_a_visual_discovery_engine_site() throws Exception {
             System.setProperty("webdriver.gecko.driver", "./src/test/resources/geckodriver.exe");
             FirefoxOptions ops = new FirefoxOptions();
@@ -73,37 +31,34 @@ import java.util.concurrent.TimeUnit;
             driver.get("https://www.pinterest.com/");
         }
 
-
-        @When("^User enters valid email \\\"([^\\\"]*)\\\" and valid password \\\"([^\\\"]*)\\\" credentials$")
-
-        public void user_enters_valid_credentials(String email, String password) throws Exception {
+    @When("^User enters invalid email \\\"([^\\\"]*)\\\",valid password  \\\"([^\\\"]*)\\\" and age (.*) credentials$")
+        public void user_enters_invalid_email_and_invalid_password_credentials(String email, String password, String age1) throws Exception {
             wait = new WebDriverWait(driver, 40);
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='tBJ dyH iFc yTZ erh tg7 mWe']")));// wait until getting the login button
-            WebElement btnLogin = driver.findElement(By.xpath("//div[@class='tBJ dyH iFc yTZ erh tg7 mWe']"));
-            btnLogin.click();
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//body/div[@id='__PWS_ROOT__']/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[3]/button[1]")));
+            WebElement btnSignup = driver.findElement(By.xpath("//body/div[@id='__PWS_ROOT__']/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[3]/button[1]"));
+            btnSignup.click();
             Thread.sleep(1000);
             WebElement txtEmail = driver.findElement(By.id("email"));
             txtEmail.sendKeys(email);
             WebElement txtPassword = driver.findElement(By.id("password"));
             txtPassword.sendKeys(password);
+            WebElement age  = driver.findElement(By.xpath("//input[@id='age']"));
+            age.sendKeys(age1);
             Thread.sleep(1000);
-            WebElement btnSubmitLogin = driver.findElement(By.xpath("//div[@class='zI7 iyn Hsu'][contains(text(),'Log in')]"));
+            WebElement btnSubmitLogin = driver.findElement(By.xpath("//body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[5]/div[1]/div[1]/form[1]/div[5]"));
             btnSubmitLogin.click();
         }
+    @Then("^User cannot signed up$")
+        public void user_cannot_logged_in_successfully() throws Exception {
+                wait = new WebDriverWait(driver, 40);
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//body[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[5]/div[1]/div[1]/form[1]/div[5]/button[1]")));
+                String text = driver.findElement(By.xpath("//div[@class='tBJ dyH iFc _yT lZJ zDA IZT swG']")).getText();
+                Assert.assertTrue(text.contains("Your password is too short! You need 6+ characters."));
 
-        @Then("^User can logged in successfully$")
-        public void user_can_logged_in_successfully() throws Exception {
-            wait = new WebDriverWait(driver, 40);
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='INd Jea gjz mQ8 zI7 iyn Hsu']//div[@class='INd XiG qJc zI7 iyn Hsu']//div[@class='INd XiG gpV zI7 iyn Hsu']//div[@class='Jea MIw QLY Rym mQ8 ojN p6V zI7 iyn Hsu']//*[@width='100%']")));
-            WebElement lblUserName = driver.findElement(By.xpath("//div[@class='INd Jea gjz mQ8 zI7 iyn Hsu']//div[@class='INd XiG qJc zI7 iyn Hsu']//div[@class='INd XiG gpV zI7 iyn Hsu']//div[@class='Jea MIw QLY Rym mQ8 ojN p6V zI7 iyn Hsu']//*[@width='100%']"));
-            Assert.assertEquals(lblUserName.getText(), "S");
-        }
-
-
-        @After
-        public void closeBrowser() {
+            }
+            @After
+            public void closeBrowser () {
             driver.quit();
-        }
-    }
-
+            }
+}
 
